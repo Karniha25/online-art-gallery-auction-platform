@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-    <title>Online Art Gallery - Artworks</title>
+    <title>Online Art Gallery - Browse Artworks</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -9,47 +10,13 @@
 
 <div class="container">
 
-    <h1>Online Art Gallery</h1>
+```
+<h1>Online Art Gallery</h1>
 
-    <h2>Add Artwork</h2>
+<h2>Available Artworks</h2>
 
-    <form id="artworkForm">
-
-        <input type="text"
-               id="title"
-               placeholder="Artwork Title"
-               required>
-
-        <textarea id="description"
-                  placeholder="Artwork Description"
-                  required></textarea>
-
-        <input type="text"
-               id="imageUrl"
-               placeholder="Image URL">
-
-        <input type="number"
-               id="price"
-               placeholder="Price"
-               step="0.01"
-               required>
-
-        <input type="text"
-               id="artistName"
-               placeholder="Artist Name"
-               required>
-
-        <button type="submit">Add Artwork</button>
-
-    </form>
-
-    <p id="message"></p>
-
-    <hr>
-
-    <h2>Available Artworks</h2>
-
-    <div id="artworkList"></div>
+<div id="artworkList"></div>
+```
 
 </div>
 
@@ -57,51 +24,6 @@
 
 const API_URL = "http://localhost:8080/api/artworks";
 
-
-// Add artwork
-document.getElementById("artworkForm").addEventListener("submit", function(event) {
-
-    event.preventDefault();
-
-    const artwork = {
-        title: document.getElementById("title").value,
-        description: document.getElementById("description").value,
-        imageUrl: document.getElementById("imageUrl").value,
-        price: parseFloat(document.getElementById("price").value),
-        artistName: document.getElementById("artistName").value
-    };
-
-    fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(artwork)
-    })
-    .then(response => response.json())
-    .then(data => {
-
-        document.getElementById("message").innerText =
-            "Artwork added successfully!";
-
-        document.getElementById("artworkForm").reset();
-
-        loadArtworks();
-
-    })
-    .catch(error => {
-
-        console.error(error);
-
-        document.getElementById("message").innerText =
-            "Failed to add artwork.";
-
-    });
-
-});
-
-
-// Display artworks
 function loadArtworks() {
 
     fetch(API_URL)
@@ -114,25 +36,35 @@ function loadArtworks() {
 
             list.innerHTML = "";
 
+            if (artworks.length === 0) {
+                list.innerHTML = "<p>No artworks available.</p>";
+                return;
+            }
+
             artworks.forEach(artwork => {
 
                 const div = document.createElement("div");
 
                 div.innerHTML = `
-                    <h3>${artwork.title}</h3>
-                    <p>${artwork.description}</p>
-                    <p>Artist: ${artwork.artistName}</p>
-                    <p>Price: ₹${artwork.price}</p>
+                    <div>
+                        ${
+                            artwork.image
+                            ? `<img src="${artwork.image}"
+                                    width="200"
+                                    alt="${artwork.title}">`
+                            : ""
+                        }
 
-                    ${
-                        artwork.imageUrl
-                        ? `<img src="${artwork.imageUrl}"
-                                width="200"
-                                alt="${artwork.title}">`
-                        : ""
-                    }
+                        <h3>${artwork.title}</h3>
 
-                    <hr>
+                        <p>Price: ₹${artwork.price}</p>
+
+                        <button onclick="viewArtwork(${artwork.id})">
+                            View Details
+                        </button>
+
+                        <hr>
+                    </div>
                 `;
 
                 list.appendChild(div);
@@ -145,11 +77,36 @@ function loadArtworks() {
 
             console.error(error);
 
+            document.getElementById("artworkList").innerHTML =
+                "<p>Unable to load artworks.</p>";
+
         });
 }
 
 
-// Load artworks when page opens
+function viewArtwork(id) {
+
+    fetch(`${API_URL}/${id}`)
+
+        .then(response => response.json())
+
+        .then(artwork => {
+
+            alert(
+                "Title: " + artwork.title +
+                "\nPrice: ₹" + artwork.price
+            );
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+        });
+}
+
+
 loadArtworks();
 
 </script>
