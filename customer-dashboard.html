@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Dashboard - Art Gallery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Customer Dashboard</h1>
+
+    <p>Welcome to the Online Art Gallery!</p>
+
+    <hr>
+
+    <h2>Browse Artworks</h2>
+
+    <button onclick="window.location.href='artwork.html'">
+        View Artworks
+    </button>
+
+    <button onclick="logout()">
+        Logout
+    </button>
+
+</div>
+
+<script>
+function logout() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

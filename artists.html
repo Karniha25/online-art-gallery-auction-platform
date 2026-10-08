@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Art Gallery - Artists</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Artists</h1>
+
+    <div id="artistsList">
+        Loading artists...
+    </div>
+
+    <br>
+
+    <a href="index.html">Back to Home</a>
+</div>
+
+<script>
+    fetch("http://localhost:8080/api/artists")
+        .then(response => response.json())
+        .then(artists => {
+
+            const artistsList = document.getElementById("artistsList");
+
+            artistsList.innerHTML = "";
+
+            if (artists.length === 0) {
+                artistsList.innerHTML = "<p>No artists found.</p>";
+                return;
+            }
+
+            artists.forEach(artist => {
+
+                const artistDiv = document.createElement("div");
+
+                artistDiv.innerHTML = `
+                    <h2>${artist.name}</h2>
+                    <p>${artist.bio}</p>
+                    <p><strong>Email:</strong> ${artist.email}</p>
+                    <hr>
+                `;
+
+                artistsList.appendChild(artistDiv);
+            });
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById("artistsList").innerText =
+                "Unable to load artists.";
+        });
+</script>
+
+</body>
+</html>

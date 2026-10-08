@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Art Gallery - Artworks</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Online Art Gallery</h1>
+
+    <h2>Add Artwork</h2>
+
+    <form id="artworkForm">
+
+        <input type="text"
+               id="title"
+               placeholder="Artwork Title"
+               required>
+
+        <textarea id="description"
+                  placeholder="Artwork Description"
+                  required></textarea>
+
+        <input type="text"
+               id="imageUrl"
+               placeholder="Image URL">
+
+        <input type="number"
+               id="price"
+               placeholder="Price"
+               step="0.01"
+               required>
+
+        <input type="text"
+               id="artistName"
+               placeholder="Artist Name"
+               required>
+
+        <button type="submit">Add Artwork</button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <hr>
+
+    <h2>Available Artworks</h2>
+
+    <div id="artworkList"></div>
+
+</div>
+
+<script>
+
+const API_URL = "http://localhost:8080/api/artworks";
+
+
+// Add artwork
+document.getElementById("artworkForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const artwork = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        imageUrl: document.getElementById("imageUrl").value,
+        price: parseFloat(document.getElementById("price").value),
+        artistName: document.getElementById("artistName").value
+    };
+
+    fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(artwork)
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        document.getElementById("message").innerText =
+            "Artwork added successfully!";
+
+        document.getElementById("artworkForm").reset();
+
+        loadArtworks();
+
+    })
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById("message").innerText =
+            "Failed to add artwork.";
+
+    });
+
+});
+
+
+// Display artworks
+function loadArtworks() {
+
+    fetch(API_URL)
+
+        .then(response => response.json())
+
+        .then(artworks => {
+
+            const list = document.getElementById("artworkList");
+
+            list.innerHTML = "";
+
+            artworks.forEach(artwork => {
+
+                const div = document.createElement("div");
+
+                div.innerHTML = `
+                    <h3>${artwork.title}</h3>
+                    <p>${artwork.description}</p>
+                    <p>Artist: ${artwork.artistName}</p>
+                    <p>Price: ₹${artwork.price}</p>
+
+                    ${
+                        artwork.imageUrl
+                        ? `<img src="${artwork.imageUrl}"
+                                width="200"
+                                alt="${artwork.title}">`
+                        : ""
+                    }
+
+                    <hr>
+                `;
+
+                list.appendChild(div);
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+        });
+}
+
+
+// Load artworks when page opens
+loadArtworks();
+
+</script>
+
+</body>
+</html>
