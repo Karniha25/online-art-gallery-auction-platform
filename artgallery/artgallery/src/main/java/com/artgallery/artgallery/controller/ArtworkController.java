@@ -53,6 +53,7 @@ public class ArtworkController {
         existingArtwork.setImageUrl(artwork.getImageUrl());
         existingArtwork.setPrice(artwork.getPrice());
         existingArtwork.setArtistName(artwork.getArtistName());
+        existingArtwork.setAuctionStatus(artwork.getAuctionStatus());
 
         return artworkRepository.save(existingArtwork);
     }

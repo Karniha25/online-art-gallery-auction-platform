@@ -20,17 +20,19 @@ public class Artwork {
     private Double price;
 
     private String artistName;
+    private String auctionStatus;
 
     public Artwork() {
     }
 
     public Artwork(String title, String description, String imageUrl,
-                   Double price, String artistName) {
+                   Double price, String artistName, String auctionStatus) {
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
         this.price = price;
         this.artistName = artistName;
+        this.auctionStatus = auctionStatus;
     }
 
     public Long getId() {
@@ -79,5 +81,12 @@ public class Artwork {
 
     public void setArtistName(String artistName) {
         this.artistName = artistName;
+    }
+    public String getAuctionStatus() {
+         return auctionStatus;
+    }
+
+    public void setAuctionStatus(String auctionStatus) {
+        this.auctionStatus = auctionStatus;
     }
 }

@@ -15,29 +15,28 @@
 
     <form id="artworkForm">
 
-        <input type="text"
-               id="title"
-               placeholder="Artwork Title"
-               required>
+        <input type="text" id="title"
+               placeholder="Artwork Title" required>
 
         <textarea id="description"
-                  placeholder="Artwork Description"
-                  required></textarea>
+                  placeholder="Artwork Description" required></textarea>
 
-        <input type="text"
-               id="imageUrl"
+        <input type="text" id="imageUrl"
                placeholder="Image URL">
 
-        <input type="number"
-               id="price"
+        <input type="number" id="price"
                placeholder="Price"
-               step="0.01"
-               required>
+               step="0.01" required>
 
-        <input type="text"
-               id="artistName"
-               placeholder="Artist Name"
-               required>
+        <input type="text" id="artistName"
+               placeholder="Artist Name" required>
+
+        <select id="auctionStatus" required>
+            <option value="">Select Auction Status</option>
+            <option value="Available">Available</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Sold">Sold</option>
+        </select>
 
         <button type="submit">Add Artwork</button>
 
@@ -57,8 +56,6 @@
 
 const API_URL = "http://localhost:8080/api/artworks";
 
-
-// Add artwork
 document.getElementById("artworkForm").addEventListener("submit", function(event) {
 
     event.preventDefault();
@@ -68,7 +65,8 @@ document.getElementById("artworkForm").addEventListener("submit", function(event
         description: document.getElementById("description").value,
         imageUrl: document.getElementById("imageUrl").value,
         price: parseFloat(document.getElementById("price").value),
-        artistName: document.getElementById("artistName").value
+        artistName: document.getElementById("artistName").value,
+        auctionStatus: document.getElementById("auctionStatus").value
     };
 
     fetch(API_URL, {
@@ -101,7 +99,6 @@ document.getElementById("artworkForm").addEventListener("submit", function(event
 });
 
 
-// Display artworks
 function loadArtworks() {
 
     fetch(API_URL)
@@ -120,9 +117,20 @@ function loadArtworks() {
 
                 div.innerHTML = `
                     <h3>${artwork.title}</h3>
-                    <p>${artwork.description}</p>
-                    <p>Artist: ${artwork.artistName}</p>
-                    <p>Price: ₹${artwork.price}</p>
+
+                    <p><strong>Artwork ID:</strong> ${artwork.id}</p>
+
+                    <p><strong>Description:</strong>
+                    ${artwork.description}</p>
+
+                    <p><strong>Artist:</strong>
+                    ${artwork.artistName}</p>
+
+                    <p><strong>Price:</strong>
+                    ₹${artwork.price}</p>
+
+                    <p><strong>Auction Status:</strong>
+                    ${artwork.auctionStatus || "Not specified"}</p>
 
                     ${
                         artwork.imageUrl
@@ -148,8 +156,6 @@ function loadArtworks() {
         });
 }
 
-
-// Load artworks when page opens
 loadArtworks();
 
 </script>
